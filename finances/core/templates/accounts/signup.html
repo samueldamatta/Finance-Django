@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - FinanceApp</title>
+    <link rel="stylesheet" href="{% static 'css/auth-styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Left Side - Branding -->
+        <div class="auth-branding">
+            <div class="branding-content">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <h1>FinanceApp</h1>
+                </div>
+                <h2>Comece sua jornada financeira</h2>
+                <p>Junte-se a milhares de usuários que já transformaram sua relação com o dinheiro. Cadastre-se gratuitamente e tenha controle total das suas finanças.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-gift"></i>
+                        <span>Gratuito para sempre</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-clock"></i>
+                        <span>Configuração em 2 minutos</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-users"></i>
+                        <span>Mais de 10.000 usuários</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Signup Form -->
+        <div class="auth-form-container">
+            <div class="auth-form">
+                <div class="form-header">
+                    <h2>Crie sua conta</h2>
+                    <p>Preencha os dados abaixo para começar</p>
+                </div>
+
+                <form method="post" id="signupForm" class="signup-form" novalidate>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="firstName">Nome completo</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="firstName" name="firstName" placeholder="Seu nome" required>
+                        </div>
+                        <span class="error-message" id="firstName-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+                        </div>
+                        <span class="error-message" id="email-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres" required>
+                            <button type="button" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-fill"></div>
+                            </div>
+                            <span class="strength-text">Digite uma senha</span>
+                        </div>
+                        <span class="error-message" id="password-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirmar Senha</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirme sua senha" required>
+                            <button type="button" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span class="error-message" id="confirmPassword-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <span class="checkmark"></span>
+                            Eu concordo com os <a href="#" target="_blank">Termos de Uso</a> e <a href="#" target="_blank">Política de Privacidade</a>
+                        </label>
+                        <span class="error-message" id="terms-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="newsletter" name="newsletter">
+                            <span class="checkmark"></span>
+                            Quero receber dicas financeiras e novidades por e-mail
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="signupBtn">
+                        <span class="btn-text">Criar Conta</span>
+                        <span class="btn-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Criando conta...
+                        </span>
+                    </button>
+
+                    <div class="divider">
+                        <span>ou</span>
+                    </div>
+
+                    <button type="button" class="btn-google">
+                        <i class="fab fa-google"></i>
+                        Cadastrar com Google
+                    </button>
+
+                    <div class="form-footer">
+                        <p>Já tem uma conta? <a href="{% url 'login' %}">Faça login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="toast" class="toast"></div>
+
+    <script src="{% static 'js/auth-script.js' %}"></script>
+</body>
+</html>

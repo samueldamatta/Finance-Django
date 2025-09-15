@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão Financeira - Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-chart-line"></i> FinanceApp</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active">
+                <a href="#dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#expenses">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>Despesas</span>
+                </a>
+            </li>
+            <li>
+                <a href="#income">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Receitas</span>
+                </a>
+            </li>
+            <li>
+                <a href="#categories">
+                    <i class="fas fa-tags"></i>
+                    <span>Categorias</span>
+                </a>
+            </li>
+            <li>
+                <a href="#reports">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Relatórios</span>
+                </a>
+            </li>
+            <li>
+                <a href="#settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="Usuário" class="user-avatar">
+                    <span class="user-name">João Silva</span>
+                    <button class="logout-btn" title="Sair">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="card balance-card">
+                    <div class="card-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Saldo Atual</h3>
+                        <p class="amount positive">R$ 5.420,50</p>
+                    </div>
+                </div>
+                
+                <div class="card income-card">
+                    <div class="card-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Receitas do Mês</h3>
+                        <p class="amount positive">R$ 8.500,00</p>
+                    </div>
+                </div>
+                
+                <div class="card expense-card">
+                    <div class="card-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Despesas do Mês</h3>
+                        <p class="amount negative">R$ 3.079,50</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Recent Transactions -->
+            <div class="dashboard-grid">
+                <!-- Chart Section -->
+                <div class="chart-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Despesas por Categoria</h3>
+                            <select class="period-selector">
+                                <option>Este Mês</option>
+                                <option>Últimos 3 Meses</option>
+                                <option>Este Ano</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="transactions-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Transações Recentes</h3>
+                            <a href="#" class="view-all">Ver todas</a>
+                        </div>
+                        <div class="transactions-list">
+                            <div class="transaction-item">
+                                <div class="transaction-icon expense">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Supermercado</h4>
+                                    <p>Alimentação • Hoje</p>
+                                </div>
+                                <div class="transaction-amount negative">
+                                    -R$ 156,80
+                                </div>
+                            </div>
+                            
+                            <div class="transaction-item">
+                                <div class="transaction-icon income">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Salário</h4>
+                                    <p>Trabalho • Ontem</p>
+                                </div>
+                                <div class="transaction-amount positive">
+                                    +R$ 4.500,00
+                                </div>
+                            </div>
+                            
+                            <div class="transaction-item">
+                                <div class="transaction-icon expense">
+                                    <i class="fas fa-gas-pump"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Combustível</h4>
+                                    <p>Transporte • 2 dias atrás</p>
+                                </div>
+                                <div class="transaction-amount negative">
+                                    -R$ 85,00
+                                </div>
+                            </div>
+                            
+                            <div class="transaction-item">
+                                <div class="transaction-icon expense">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Aluguel</h4>
+                                    <p>Moradia • 3 dias atrás</p>
+                                </div>
+                                <div class="transaction-amount negative">
+                                    -R$ 1.200,00
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="action-btn primary">
+                    <i class="fas fa-plus"></i>
+                    Nova Receita
+                </button>
+                <button class="action-btn secondary">
+                    <i class="fas fa-minus"></i>
+                    Nova Despesa
+                </button>
+                <button class="action-btn tertiary">
+                    <i class="fas fa-chart-line"></i>
+                    Ver Relatórios
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

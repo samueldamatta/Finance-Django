@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestão Financeira{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-chart-line"></i> FinanceApp</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <a href="{% url 'dashboard' %}">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'expenses' %}active{% endif %}">
+                <a href="{% url 'expenses' %}">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>Despesas</span>
+                </a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'income' %}active{% endif %}">
+                <a href="{% url 'income' %}">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Receitas</span>
+                </a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'categories' %}active{% endif %}">
+                <a href="{% url 'categories' %}">
+                    <i class="fas fa-tags"></i>
+                    <span>Categorias</span>
+                </a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+                <a href="{% url 'reports' %}">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Relatórios</span>
+                </a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
+                <a href="{% url 'settings' %}">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    {% if user.is_authenticated %}
+                        <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}https://via.placeholder.com/40{% endif %}" alt="Usuário" class="user-avatar">
+                        <span class="user-name">{{ user.get_full_name|default:user.username }}</span>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="login-btn">Entrar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="dashboard-content">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            <i class="fas fa-info-circle"></i>
+                            {{ message }}
+                            <button class="alert-close">&times;</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
