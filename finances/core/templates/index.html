@@ -23,13 +23,13 @@
                 </a>
             </li>
             <li>
-                <a href="#expenses">
+                <a href="{% url 'despesas' %}">
                     <i class="fas fa-arrow-down"></i>
                     <span>Despesas</span>
                 </a>
             </li>
             <li>
-                <a href="#income">
+                <a href="{% url 'receitas' %}">
                     <i class="fas fa-arrow-up"></i>
                     <span>Receitas</span>
                 </a>
@@ -86,7 +86,7 @@
                     </div>
                     <div class="card-content">
                         <h3>Saldo Atual</h3>
-                        <p class="amount positive">R$ 5.420,50</p>
+                        <p class="amount positive">R$ {{ transaction_amount }}</p>
                     </div>
                 </div>
                 
@@ -198,15 +198,15 @@
             <div class="quick-actions">
                 <button class="action-btn primary">
                     <i class="fas fa-plus"></i>
-                    Nova Receita
+                    <a href="{% url 'receitas' %}">Nova Receita</a>
                 </button>
                 <button class="action-btn secondary">
                     <i class="fas fa-minus"></i>
-                    Nova Despesa
+                    <a href="{% url 'despesas' %}">Nova Despesa</a>
                 </button>
                 <button class="action-btn tertiary">
                     <i class="fas fa-chart-line"></i>
-                    Ver Relatórios
+                    <a href="#">Ver Relatórios</a>
                 </button>
             </div>
         </div>

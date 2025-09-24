@@ -1,13 +1,15 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 # Create your models here.
-class User(models.Model):
-    name = models.CharField(max_length=100)
+class User(AbstractUser):
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=100)
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return f'{self.name} ({self.email})'
+        return f'{self.username} ({self.email})'
     
 class Transaction(models.Model):
     TRANSACTION_TYPES = [
@@ -22,4 +24,4 @@ class Transaction(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f'{self.transaction_type.capitalize()} of {self.amount} on {self.date} for {self.user.name}'
+        return f'{self.transaction_type.capitalize()} of {self.amount} on {self.date} for {self.user.username}'

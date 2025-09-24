@@ -45,6 +45,14 @@ INSTALLED_APPS = [
     'core',
 ]
 
+# Backend de autenticação personalizado
+AUTHENTICATION_BACKENDS = [
+    'core.backends.EmailBackend',
+]
+
+# Modelo de usuário personalizado
+AUTH_USER_MODEL = 'core.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -119,6 +127,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'core' / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

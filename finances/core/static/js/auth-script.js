@@ -216,12 +216,7 @@ function setupFormSubmission() {
 
 // Manipular envio do formulário de login
 function handleLoginSubmit(e) {
-    e.preventDefault();
-    
     const form = e.target;
-    const formData = new FormData(form);
-    const email = formData.get('email');
-    const password = formData.get('password');
     
     // Validar campos
     const emailField = form.querySelector('#email');
@@ -229,42 +224,26 @@ function handleLoginSubmit(e) {
     
     let isValid = true;
     
-    if (!validateField(emailField)) isValid = false;
-    if (!validateField(passwordField)) isValid = false;
+    if (emailField && !validateField(emailField)) isValid = false;
+    if (passwordField && !validateField(passwordField)) isValid = false;
     
     if (!isValid) {
+        e.preventDefault(); // Só prevenir se houver erro
         showToast('Por favor, corrija os erros no formulário', 'error');
         return;
     }
     
-    // Simular envio do formulário
-    const submitButton = form.querySelector('#loginBtn');
-    setLoadingState(submitButton, true);
-    
-    // Simular requisição AJAX
-    setTimeout(() => {
-        setLoadingState(submitButton, false);
-        
-        // Simular sucesso/erro
-        if (email === 'demo@demo.com' && password === 'demo123') {
-            showToast('Login realizado com sucesso!', 'success');
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1500);
-        } else {
-            showToast('E-mail ou senha incorretos', 'error');
-        }
-    }, 2000);
+    // Se chegou até aqui, deixa o Django processar o formulário normalmente
 }
 
 // Manipular envio do formulário de cadastro
 function handleSignupSubmit(e) {
-    e.preventDefault();
+    // Remover preventDefault para permitir que o Django processe o formulário
+    // e.preventDefault();
     
     const form = e.target;
-    const formData = new FormData(form);
     
-    // Validar todos os campos
+    // Validar todos os campos antes de enviar
     const requiredFields = form.querySelectorAll('input[required]');
     let isValid = true;
     
@@ -275,23 +254,12 @@ function handleSignupSubmit(e) {
     });
     
     if (!isValid) {
+        e.preventDefault(); // Só prevenir se houver erro
         showToast('Por favor, corrija os erros no formulário', 'error');
         return;
     }
     
-    // Simular envio do formulário
-    const submitButton = form.querySelector('#signupBtn');
-    setLoadingState(submitButton, true);
-    
-    // Simular requisição AJAX
-    setTimeout(() => {
-        setLoadingState(submitButton, false);
-        showToast('Conta criada com sucesso! Redirecionando...', 'success');
-        
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 2000);
-    }, 3000);
+    // Se chegou até aqui, deixa o Django processar o formulário normalmente
 }
 
 // Definir estado de carregamento do botão
