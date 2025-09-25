@@ -6,8 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão Financeira - Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard-styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Adicionar Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -17,7 +20,7 @@
         </div>
         <ul class="sidebar-menu">
             <li class="active">
-                <a href="#dashboard">
+                <a href="{% url 'index' %}">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
@@ -35,7 +38,7 @@
                 </a>
             </li>
             <li>
-                <a href="#categories">
+                <a href="{% url 'categorias' %}">
                     <i class="fas fa-tags"></i>
                     <span>Categorias</span>
                 </a>
@@ -67,7 +70,6 @@
             </div>
             <div class="header-right">
                 <div class="user-profile">
-                    <img src="https://via.placeholder.com/40" alt="Usuário" class="user-avatar">
                     <span class="user-name">João Silva</span>
                     <button class="logout-btn" title="Sair">
                         <i class="fas fa-sign-out-alt"></i>
@@ -86,7 +88,9 @@
                     </div>
                     <div class="card-content">
                         <h3>Saldo Atual</h3>
-                        <p class="amount positive">R$ {{ transaction_amount }}</p>
+                        <p class="amount {% if saldo_atual >= 0 %}positive{% else %}negative{% endif %}">
+                            R$ {{ saldo_atual|floatformat:2 }}
+                        </p>
                     </div>
                 </div>
                 
@@ -96,7 +100,7 @@
                     </div>
                     <div class="card-content">
                         <h3>Receitas do Mês</h3>
-                        <p class="amount positive">R$ 8.500,00</p>
+                        <p class="amount positive">R$ {{ total_receitas|floatformat:2 }}</p>
                     </div>
                 </div>
                 
@@ -106,113 +110,199 @@
                     </div>
                     <div class="card-content">
                         <h3>Despesas do Mês</h3>
-                        <p class="amount negative">R$ 3.079,50</p>
+                        <p class="amount negative">R$ {{ total_despesas|floatformat:2 }}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts and Recent Transactions -->
-            <div class="dashboard-grid">
-                <!-- Chart Section -->
-                <div class="chart-section">
+            <!-- Seção de Gráficos -->
+            <div class="charts-section">
+                <div class="chart-container">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Despesas por Categoria</h3>
-                            <select class="period-selector">
-                                <option>Este Mês</option>
-                                <option>Últimos 3 Meses</option>
-                                <option>Este Ano</option>
-                            </select>
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-bar"></i>
+                                Gastos por Categoria
+                            </h3>
                         </div>
-                        <div class="chart-container">
-                            <canvas id="expenseChart"></canvas>
+                        <div class="chart-wrapper">
+                            {% if categorias_labels %}
+                                <canvas id="categoryChart" width="400" height="200"></canvas>
+                            {% else %}
+                                <div class="empty-chart">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <p>Adicione despesas com categorias para ver o gráfico</p>
+                                    <a href="{% url 'despesas' %}" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i>
+                                        Adicionar Despesa
+                                    </a>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
 
-                <!-- Recent Transactions -->
-                <div class="transactions-section">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Transações Recentes</h3>
-                            <a href="#" class="view-all">Ver todas</a>
-                        </div>
-                        <div class="transactions-list">
-                            <div class="transaction-item">
-                                <div class="transaction-icon expense">
-                                    <i class="fas fa-shopping-cart"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <h4>Supermercado</h4>
-                                    <p>Alimentação • Hoje</p>
-                                </div>
-                                <div class="transaction-amount negative">
-                                    -R$ 156,80
-                                </div>
+                <div class="category-stats">
+                    {% if categorias_labels %}
+                    <div class="card stat-card">
+                        <div class="stat-content">
+                            <div class="stat-icon highest">
+                                <i class="fas fa-arrow-up"></i>
                             </div>
-                            
-                            <div class="transaction-item">
-                                <div class="transaction-icon income">
-                                    <i class="fas fa-briefcase"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <h4>Salário</h4>
-                                    <p>Trabalho • Ontem</p>
-                                </div>
-                                <div class="transaction-amount positive">
-                                    +R$ 4.500,00
-                                </div>
-                            </div>
-                            
-                            <div class="transaction-item">
-                                <div class="transaction-icon expense">
-                                    <i class="fas fa-gas-pump"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <h4>Combustível</h4>
-                                    <p>Transporte • 2 dias atrás</p>
-                                </div>
-                                <div class="transaction-amount negative">
-                                    -R$ 85,00
-                                </div>
-                            </div>
-                            
-                            <div class="transaction-item">
-                                <div class="transaction-icon expense">
-                                    <i class="fas fa-home"></i>
-                                </div>
-                                <div class="transaction-details">
-                                    <h4>Aluguel</h4>
-                                    <p>Moradia • 3 dias atrás</p>
-                                </div>
-                                <div class="transaction-amount negative">
-                                    -R$ 1.200,00
-                                </div>
+                            <div class="stat-info">
+                                <h4>Maior Gasto</h4>
+                                <p class="category-name">{{ categoria_maior_gasto }}</p>
+                                <p class="stat-value negative">R$ {{ valor_maior_gasto|floatformat:2 }}</p>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="card stat-card">
+                        <div class="stat-content">
+                            <div class="stat-icon lowest">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Menor Gasto</h4>
+                                <p class="category-name">{{ categoria_menor_gasto }}</p>
+                                <p class="stat-value">R$ {{ valor_menor_gasto|floatformat:2 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Transações Recentes -->
+            <div class="transactions-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Transações Recentes</h3>
+                    </div>
+                    <div class="transactions-list">
+                        {% if transacoes_recentes %}
+                            {% for transacao in transacoes_recentes %}
+                                <div class="transaction-item">
+                                    <div class="transaction-icon {% if transacao.transaction_type == 'receita' %}income{% else %}expense{% endif %}">
+                                        {% if transacao.transaction_type == 'receita' %}
+                                            <i class="fas fa-plus-circle"></i>
+                                        {% else %}
+                                            <i class="fas fa-minus-circle"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="transaction-details">
+                                        <h4>
+                                            {% if transacao.description %}
+                                                {{ transacao.description }}
+                                            {% else %}
+                                                {% if transacao.transaction_type == 'receita' %}Receita{% else %}Despesa{% endif %}
+                                            {% endif %}
+                                        </h4>
+                                        <p>{{ transacao.transaction_type|capfirst }} • {{ transacao.date|date:"d/m/Y" }}</p>
+                                    </div>
+                                    <div class="transaction-amount {% if transacao.transaction_type == 'receita' %}positive{% else %}negative{% endif %}">
+                                        {% if transacao.transaction_type == 'receita' %}+{% else %}-{% endif %}R$ {{ transacao.amount|floatformat:2 }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="empty-transactions">
+                                <p>Nenhuma transação encontrada.</p>
+                                <p>Comece adicionando sua primeira transação!</p>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
 
             <!-- Quick Actions -->
             <div class="quick-actions">
-                <button class="action-btn primary">
+                <a href="{% url 'receitas' %}" class="action-btn primary">
                     <i class="fas fa-plus"></i>
-                    <a href="{% url 'receitas' %}">Nova Receita</a>
-                </button>
-                <button class="action-btn secondary">
+                    Nova Receita
+                </a>
+                <a href="{% url 'despesas' %}" class="action-btn secondary">
                     <i class="fas fa-minus"></i>
-                    <a href="{% url 'despesas' %}">Nova Despesa</a>
-                </button>
-                <button class="action-btn tertiary">
+                    Nova Despesa
+                </a>
+                <a href="#" class="action-btn tertiary">
                     <i class="fas fa-chart-line"></i>
-                    <a href="#">Ver Relatórios</a>
-                </button>
+                    Ver Relatórios
+                </a>
             </div>
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{% static 'js/script.js' %}"></script>
+    <!-- Adicionar JavaScript no final, antes de </body> -->
+    <script>
+        // Configuração do gráfico de categorias
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar se as variáveis existem
+            const labelsRaw = '{{ categorias_labels|default:"[]"|safe }}';
+            const dataRaw = '{{ categorias_values|default:"[]"|safe }}';
+            
+            let labels, data;
+            try {
+                labels = labelsRaw !== '[]' ? {{ categorias_labels|safe }} : [];
+                data = dataRaw !== '[]' ? {{ categorias_values|safe }} : [];
+            } catch (e) {
+                labels = [];
+                data = [];
+            }
+            
+            // Verificar se há dados e se o elemento existe
+            if (labels.length === 0 || data.length === 0) return;
+            
+            const ctxElement = document.getElementById('categoryChart');
+            if (!ctxElement) return;
+            
+            const ctx = ctxElement.getContext('2d');
+            
+            const colors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                '#9966FF', '#FF9F40', '#e74c3c', '#2ecc71'
+            ];
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Gastos (R$)',
+                        data: data,
+                        backgroundColor: colors.slice(0, labels.length),
+                        borderColor: colors.slice(0, labels.length),
+                        borderWidth: 1,
+                        borderRadius: 5,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

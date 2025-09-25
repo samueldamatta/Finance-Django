@@ -361,7 +361,16 @@ body {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-decoration: none;
+    text-decoration: none !important;
+    color: inherit;
+}
+
+.action-btn:hover {
+    text-decoration: none !important;
+}
+
+.action-btn:visited {
+    text-decoration: none !important;
 }
 
 .action-btn.primary {

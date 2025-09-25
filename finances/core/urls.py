@@ -10,4 +10,6 @@ urlpatterns = [
     path('despesas/delete/<int:expense_id>/', delete_expense, name='delete_expense'),
     path('receitas/', receitas, name='receitas'),
     path('receitas/delete/<int:income_id>/', delete_income, name='delete_income'),
+    path('categorias/', categorias, name='categorias'),
+    path('categorias/delete/<int:category_id>/', delete_category, name='delete_category'),
 ]

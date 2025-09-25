@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from .models import Transaction
+from .models import Transaction, Category
 
 User = get_user_model()
 
@@ -91,14 +91,26 @@ class TransactionForm(forms.ModelForm):
         }
 
 class ExpenseForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['category'].queryset = Category.objects.filter(
+                user=user, 
+                category_type__in=['despesa', 'ambos']
+            )
+    
     class Meta:
         model = Transaction
-        fields = ['amount', 'date', 'description']
+        fields = ['amount', 'category', 'date', 'description']
         widgets = {
             'amount': forms.NumberInput(attrs={
                 'placeholder': '0,00',
                 'class': 'form-control',
                 'step': '0.01'
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-control'
             }),
             'date': forms.DateInput(attrs={
                 'class': 'form-control',
@@ -119,14 +131,26 @@ class ExpenseForm(forms.ModelForm):
         return instance
 
 class IncomeForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['category'].queryset = Category.objects.filter(
+                user=user, 
+                category_type__in=['receita', 'ambos']
+            )
+    
     class Meta:
         model = Transaction
-        fields = ['amount', 'date', 'description']
+        fields = ['amount', 'category', 'date', 'description']
         widgets = {
             'amount': forms.NumberInput(attrs={
                 'placeholder': '0,00',
                 'class': 'form-control',
                 'step': '0.01'
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-control'
             }),
             'date': forms.DateInput(attrs={
                 'class': 'form-control',
@@ -142,6 +166,33 @@ class IncomeForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.transaction_type = 'receita'
+        if commit:
+            instance.save()
+        return instance
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'category_type', 'icon', 'color']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Nome da categoria',
+                'class': 'form-control'
+            }),
+            'category_type': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'icon': forms.TextInput(attrs={
+                'placeholder': 'ex: fas fa-shopping-cart',
+                'class': 'form-control'
+            }),
+            'color': forms.ColorInput(attrs={
+                'class': 'form-control'
+            }),
+        }
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
         if commit:
             instance.save()
         return instance

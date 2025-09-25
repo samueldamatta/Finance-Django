@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorias - FinanceApp</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard-styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <h1>FinanceApp</h1>
+                </div>
+            </div>
+            <div class="sidebar-menu">
+                <a href="{% url 'index' %}" class="menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'despesas' %}" class="menu-item">
+                    <i class="fas fa-minus-circle"></i>
+                    <span>Despesas</span>
+                </a>
+                <a href="{% url 'receitas' %}" class="menu-item">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Receitas</span>
+                </a>
+                <a href="{% url 'categorias' %}" class="menu-item active">
+                    <i class="fas fa-tags"></i>
+                    <span>Categorias</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Relatórios</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </a>
+                <a href="{% url 'logout' %}" class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Header da Página -->
+            <div class="page-header">
+                <div class="page-title">
+                    <i class="fas fa-tags"></i>
+                    <h1>Categorias</h1>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-primary" onclick="toggleAddForm()">
+                        <i class="fas fa-plus"></i>
+                        Nova Categoria
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mensagens -->
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Resumo -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Resumo de Categorias</h3>
+                </div>
+                <div class="form-grid">
+                    <div style="text-align: center; padding: 20px;">
+                        <h4 style="color: #007bff; margin: 0; font-size: 24px;">
+                            {{ categories|length }}
+                        </h4>
+                        <p style="color: #6c757d; margin: 5px 0 0 0;">Total de Categorias</p>
+                    </div>
+                    <div style="text-align: center; padding: 20px;">
+                        <h4 style="color: #28a745; margin: 0; font-size: 24px;">
+                            {{ categories|length|add:"0" }}
+                        </h4>
+                        <p style="color: #6c757d; margin: 5px 0 0 0;">Categorias Ativas</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário de Nova Categoria -->
+            <div class="card" id="addCategoryForm" style="display: none;">
+                <div class="card-header">
+                    <h3 class="card-title">Adicionar Nova Categoria</h3>
+                    <button class="btn btn-outline" onclick="toggleAddForm()">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="id_name">Nome da Categoria *</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <span class="error-message">{{ form.name.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_category_type">Tipo *</label>
+                            {{ form.category_type }}
+                            {% if form.category_type.errors %}
+                                <span class="error-message">{{ form.category_type.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="id_icon">Ícone (Font Awesome) *</label>
+                            {{ form.icon }}
+                            {% if form.icon.errors %}
+                                <span class="error-message">{{ form.icon.errors.0 }}</span>
+                            {% endif %}
+                            <small class="form-text">Ex: fas fa-shopping-cart, fas fa-car, fas fa-home</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_color">Cor *</label>
+                            {{ form.color }}
+                            {% if form.color.errors %}
+                                <span class="error-message">{{ form.color.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar Categoria
+                    </button>
+                </form>
+            </div>
+
+            <!-- Lista de Categorias -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Minhas Categorias</h3>
+                </div>
+                
+                {% if categories %}
+                    <div class="categories-grid">
+                        {% for category in categories %}
+                            <div class="category-card fade-in">
+                                <div class="category-icon" style="color: '{{ category.color|default:'#000000' }}';">
+                                    <i class="{{ category.icon }}"></i>
+                                </div>
+                                <div class="category-info">
+                                    <h4>{{ category.name }}</h4>
+                                    <p class="category-type">
+                                        <span class="badge badge-{{ category.category_type }}">
+                                            {{ category.get_category_type_display }}
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="category-actions">
+                                    <form method="post" action="{% url 'delete_category' category.id %}" 
+                                          onsubmit="return confirm('Tem certeza que deseja excluir esta categoria?')">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-tags"></i>
+                        <h3>Nenhuma categoria encontrada</h3>
+                        <p>Comece criando sua primeira categoria para organizar suas transações.</p>
+                        <button class="btn btn-primary" onclick="toggleAddForm()">
+                            <i class="fas fa-plus"></i>
+                            Criar Primeira Categoria
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Função para mostrar/esconder formulário
+        function toggleAddForm() {
+            const form = document.getElementById('addCategoryForm');
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+                form.scrollIntoView({ behavior: 'smooth' });
+                // Focar no primeiro campo
+                setTimeout(() => {
+                    document.getElementById('id_name').focus();
+                }, 300);
+            } else {
+                form.style.display = 'none';
+            }
+        }
+
+        // Auto-hide mensagens após 5 segundos
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.messages .alert');
+            messages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.opacity = '0';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

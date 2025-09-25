@@ -6,46 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Despesas - FinanceApp</title>
     <link rel="stylesheet" href="{% static 'css/dashboard-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fas fa-chart-line"></i>
-                    <h1>FinanceApp</h1>
-                </div>
-            </div>
-            <div class="sidebar-menu">
-                <a href="{% url 'index' %}" class="menu-item">
-                    <i class="fas fa-home"></i>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-chart-line"></i> FinanceApp</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="active">
+                <a href="{% url 'index' %}">
+                    <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{% url 'despesas' %}" class="menu-item active">
-                    <i class="fas fa-minus-circle"></i>
+            </li>
+            <li>
+                <a href="{% url 'despesas' %}">
+                    <i class="fas fa-arrow-down"></i>
                     <span>Despesas</span>
                 </a>
-                <a href="{% url 'receitas' %}" class="menu-item">
-                    <i class="fas fa-plus-circle"></i>
+            </li>
+            <li>
+                <a href="{% url 'receitas' %}">
+                    <i class="fas fa-arrow-up"></i>
                     <span>Receitas</span>
                 </a>
-                <a href="#" class="menu-item">
+            </li>
+            <li>
+                <a href="#categories">
+                    <i class="fas fa-tags"></i>
+                    <span>Categorias</span>
+                </a>
+            </li>
+            <li>
+                <a href="#reports">
                     <i class="fas fa-chart-bar"></i>
                     <span>Relatórios</span>
                 </a>
-                <a href="#" class="menu-item">
+            </li>
+            <li>
+                <a href="#settings">
                     <i class="fas fa-cog"></i>
                     <span>Configurações</span>
                 </a>
-                <a href="{% url 'logout' %}" class="menu-item">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Sair</span>
-                </a>
-            </div>
-        </nav>
+            </li>
+        </ul>
+    </nav>
 
         <!-- Conteúdo Principal -->
         <main class="main-content">
@@ -120,12 +130,24 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="id_description">Descrição</label>
-                        {{ form.description }}
-                        {% if form.description.errors %}
-                            <span class="error-message">{{ form.description.errors.0 }}</span>
-                        {% endif %}
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="id_category">Categoria</label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <span class="error-message">{{ form.category.errors.0 }}</span>
+                            {% endif %}
+                            <small class="form-text">
+                                <a href="{% url 'categorias' %}" target="_blank">Gerenciar categorias</a>
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_description">Descrição</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <span class="error-message">{{ form.description.errors.0 }}</span>
+                            {% endif %}
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i>
@@ -146,6 +168,7 @@
                             <thead>
                                 <tr>
                                     <th>Data</th>
+                                    <th>Categoria</th>
                                     <th>Descrição</th>
                                     <th>Valor</th>
                                     <th>Ações</th>
@@ -155,6 +178,16 @@
                                 {% for expense in expenses %}
                                     <tr class="fade-in">
                                         <td>{{ expense.date|date:"d/m/Y" }}</td>
+                                        <td>
+                                            {% if expense.category %}
+                                                <span class="category-badge" style="color: '{{ expense.category.color }}';">
+                                                    <i class="{{ expense.category.icon }}"></i>
+                                                    {{ expense.category.name }}
+                                                </span>
+                                            {% else %}
+                                                <em style="color: #6c757d;">Sem categoria</em>
+                                            {% endif %}
+                                        </td>
                                         <td>
                                             {% if expense.description %}
                                                 {{ expense.description }}

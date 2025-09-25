@@ -6,19 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receitas - FinanceApp</title>
     <link rel="stylesheet" href="{% static 'css/dashboard-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
+        
+    <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-header">
             <h2><i class="fas fa-chart-line"></i> FinanceApp</h2>
         </div>
         <ul class="sidebar-menu">
             <li class="active">
-                <a href="#dashboard">
+                <a href="{% url 'index' %}">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
@@ -129,12 +131,24 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="id_description">Descrição</label>
-                        {{ form.description }}
-                        {% if form.description.errors %}
-                            <span class="error-message">{{ form.description.errors.0 }}</span>
-                        {% endif %}
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="id_category">Categoria</label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <span class="error-message">{{ form.category.errors.0 }}</span>
+                            {% endif %}
+                            <small class="form-text">
+                                <a href="{% url 'categorias' %}" target="_blank">Gerenciar categorias</a>
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_description">Descrição</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <span class="error-message">{{ form.description.errors.0 }}</span>
+                            {% endif %}
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i>
@@ -155,6 +169,7 @@
                             <thead>
                                 <tr>
                                     <th>Data</th>
+                                    <th>Categoria</th>
                                     <th>Descrição</th>
                                     <th>Valor</th>
                                     <th>Ações</th>
@@ -164,6 +179,16 @@
                                 {% for income in incomes %}
                                     <tr class="fade-in">
                                         <td>{{ income.date|date:"d/m/Y" }}</td>
+                                        <td>
+                                            {% if income.category %}
+                                                <span class="category-badge" style="color: '{{ income.category.color }}';">
+                                                    <i class="{{ income.category.icon }}"></i>
+                                                    {{ income.category.name }}
+                                                </span>
+                                            {% else %}
+                                                <em style="color: #6c757d;">Sem categoria</em>
+                                            {% endif %}
+                                        </td>
                                         <td>
                                             {% if income.description %}
                                                 {{ income.description }}

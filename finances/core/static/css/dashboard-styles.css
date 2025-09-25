@@ -306,6 +306,118 @@ body {
     color: #495057;
 }
 
+/* Seção de Gráficos */
+.charts-section {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.chart-container .card {
+    height: 400px;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 300px;
+    padding: 20px;
+}
+
+.empty-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #6c757d;
+    text-align: center;
+}
+
+.empty-chart i {
+    font-size: 48px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-chart p {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+/* Cards de Estatísticas de Categorias */
+.category-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stat-card {
+    padding: 0;
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-content {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 18px;
+    color: white;
+}
+
+.stat-icon.highest {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+}
+
+.stat-icon.lowest {
+    background: linear-gradient(135deg, #51cf66, #40c057);
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.category-name {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.stat-value {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #27ae60;
+}
+
+.stat-value.negative {
+    color: #e74c3c;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .sidebar {
@@ -330,6 +442,49 @@ body {
     
     .form-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .charts-section {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .category-stats {
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    .stat-card {
+        flex: 1;
+    }
+    
+    .chart-container .card {
+        height: 300px;
+    }
+    
+    .chart-wrapper {
+        height: 200px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-stats {
+        flex-direction: column;
+    }
+    
+    .stat-content {
+        padding: 15px;
+    }
+    
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .stat-value {
+        font-size: 18px;
     }
 }
 
@@ -371,4 +526,118 @@ body {
     background: #f8d7da;
     color: #721c24;
     border-left: 4px solid #dc3545;
+}
+
+/* Categories Styles */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.category-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #e0e6ed;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.category-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 50%;
+}
+
+.category-info {
+    flex: 1;
+}
+
+.category-info h4 {
+    margin: 0 0 5px 0;
+    font-weight: 600;
+    color: #333;
+}
+
+.category-type .badge {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.badge-receita {
+    background: #e6f7e6;
+    color: #28a745;
+}
+
+.badge-despesa {
+    background: #ffe6e6;
+    color: #dc3545;
+}
+
+.badge-ambos {
+    background: #e6f3ff;
+    color: #007bff;
+}
+
+.category-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.form-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.category-badge i {
+    font-size: 0.875rem;
+}
+
+/* Responsive adjustments for categories */
+@media (max-width: 768px) {
+    .categories-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .category-card {
+        padding: 15px;
+    }
+    
+    .category-icon {
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+    }
 }
